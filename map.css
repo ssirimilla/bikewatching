@@ -1,13 +1,124 @@
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-}
+
 
 #map {
   width: 100%;
-  height: 90vh;
+  height: 100%;
   border-radius: 8px;
+}
+
+#map {
+  position: relative;
+}
+
+#map svg {
+  position: absolute;
+  z-index: 1;
+
+  width: 100%;
+  height: 100%;
+
+  top: 0;
+  left: 0;
+
+  pointer-events: none;
+}
+
+circle {
+  pointer-events: auto;
+}
+
+header {
+  display: flex;
+  align-items: baseline;
+  gap: 1em;
+  padding: 1em;
+}
+
+label {
+  margin-left: auto;
+}
+
+time,
+em {
+  display: block;
+}
+
+em {
+  color: #666;
+  font-style: italic;
+}
+
+#map {
+  position: relative;
+  /* Make sure the map takes up the rest of the screen height */
+  height: calc(100vh - 80px); 
+}
+
+#map svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+circle {
+  fill: steelblue;
+  fill-opacity: 0.6;
+  stroke: white;
+  stroke-width: 1;
+  pointer-events: auto;
+}
+
+/* 1. Only define the static color variables at the root */
+:root {
+  --color-departures: steelblue;
+  --color-arrivals: darkorange;
+}
+
+/* 2. Move the color-mix calculation inside the circle selector */
+#map circle {
+  --color: color-mix(
+    in oklch,
+    var(--color-departures) calc(100% * var(--departure-ratio, 0.5)),
+    var(--color-arrivals)
+  );
+  fill: var(--color);
+}
+
+/* ... keep your other .legend flexbox styling ... */
+
+/* 3. Move the color-mix calculation inside the legend swatches */
+/* =================================
+   Legend Styling (Design 2: Swatches)
+   ================================= */
+.legend {
+  display: flex !important;       /* Forces items onto a single row */
+  flex-direction: row;            /* Ensures horizontal layout */
+  gap: 2em;                       /* Space between the three legend items */
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  justify-content: center;        /* Centers the legend horizontally */
+  width: 100%;
+}
+
+.legend > div {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;                     /* Space between the swatch dot and the text */
+  font-family: sans-serif;
+  font-size: 0.9em;
+  white-space: nowrap;            /* Prevents text inside a swatch from wrapping */
+}
+
+/* Create the circular swatches using a ::before pseudo-element */
+.legend > div::before {
+  content: "";
+  display: block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;             /* Makes the swatches circles */
+  background-color: var(--color); /* Automatically uses the color-mix! */
 }
